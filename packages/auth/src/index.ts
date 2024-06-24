@@ -13,6 +13,10 @@ import { OrganizationSubject } from './subjects/organization'
 import { ProjectSubject } from './subjects/project'
 import { UserSubject } from './subjects/user'
 
+export * from './models/organization'
+export * from './models/project'
+export * from './models/user'
+
 type AppAbilities =
   | UserSubject
   | ProjectSubject
@@ -33,7 +37,11 @@ export function defineAbilityFor(user: User) {
 
   permissions[user.role](user, builder)
 
-  const ability = builder.build()
+  const ability = builder.build({
+    detectSubjectType(subject) {
+      return subject.__typename
+    },
+  })
 
   return ability
 }
